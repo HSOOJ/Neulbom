@@ -199,14 +199,14 @@ public class ReportServiceImpl implements ReportService {
 		List<String> days = dateUtils.getDaysOfWeek(date, 2);
 		String startDate = days.get(0);
 		String endDate = days.get(1);
-		result.put("this", calcKcal(userSeq, startDate, endDate, mode));
+		result.put("this", (int) calcKcal(userSeq, startDate, endDate, mode) / 7);
 		
 		// 저번주 섭취 칼로리
 		String last = dateUtils.returnLastDate(date, -7);
 		days = dateUtils.getDaysOfWeek(last, 2);
 		startDate = days.get(0);
 		endDate = days.get(1);
-		result.put("last", calcKcal(userSeq, startDate, endDate, mode));
+		result.put("last", (int) calcKcal(userSeq, startDate, endDate, mode) / 7);
 
 		return result;
 	}
@@ -344,17 +344,16 @@ public class ReportServiceImpl implements ReportService {
 		for (int i = 0; i < diet.size(); i++) {
 			Diet target = diet.get(i);
 			String fc = target.getFoodCode();
-			int intakeAmount = target.getDietAmount();
+			double intakeAmount = target.getDietAmount();
 			Food food = foodRepository.findFood(fc);
-			int foodAmount = food.getFoodAmount();
-			int pivot = intakeAmount / foodAmount;
+			double pivot = intakeAmount / food.getFoodAmount();
 			
-			foodKcal += (food.getFoodKcal() == null ? 0 : food.getFoodKcal()) * pivot;
+			foodKcal 		 += (food.getFoodKcal() == null ? 0 : food.getFoodKcal()) * pivot;
 			foodCarbohydrate += (food.getFoodCarbohydrate() == null ? 0 : food.getFoodCarbohydrate()) * pivot;
-			foodProtein = (food.getFoodProtein() == null ? 0 : food.getFoodProtein()) * pivot;
-			foodFat = (food.getFoodFat() == null ? 0 : food.getFoodFat()) * pivot;
-			foodSugars = (food.getFoodSugars() == null ? 0 : food.getFoodSugars())* pivot;
-			foodNatrium = (food.getFoodNatrium() == null ? 0 : food.getFoodNatrium()) * pivot;
+			foodProtein		 += (food.getFoodProtein() == null ? 0 : food.getFoodProtein()) * pivot;
+			foodFat			 += (food.getFoodFat() == null ? 0 : food.getFoodFat()) * pivot;
+			foodSugars		 += (food.getFoodSugars() == null ? 0 : food.getFoodSugars())* pivot;
+			foodNatrium += (food.getFoodNatrium() == null ? 0 : food.getFoodNatrium()) * pivot;
 		}
 		intake.put("kcal", foodKcal);
 		intake.put("carbohydrate", foodCarbohydrate);

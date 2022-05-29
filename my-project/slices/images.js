@@ -10,6 +10,8 @@ const initialState = {
   imageurls: [],
   add: [],
   remove: [],
+  num: 0,
+  tempFood: [],
 };
 
 let nextId = 0;
@@ -27,19 +29,20 @@ const imagesSlice = createSlice({
       state.dinner = action.payload.dinner.dietList;
       state.total_dinner = action.payload.dinner.total;
     },
+
     add: (state, action) => {
-      state.add.push({ food: action.payload.tempFood, id: nextId });
+      state.add.push({ food: action.payload.food, id: nextId });
       state[`total_${action.payload.current}`] = {
         ...state[`total_${action.payload.current}`],
         kcal:
           state[`total_${action.payload.current}`].kcal +
-          action.payload.tempFood.foodKcal,
+          action.payload.food.foodKcal,
         natrium:
           state[`total_${action.payload.current}`].natrium +
-          action.payload.tempFood.foodNatrium,
+          action.payload.food.foodNatrium,
         sugars:
           state[`total_${action.payload.current}`].sugars +
-          action.payload.tempFood.foodSugars,
+          action.payload.food.foodSugars,
       };
       nextId += 1;
       // return {
@@ -53,6 +56,12 @@ const imagesSlice = createSlice({
       //   ],
       // };
     },
+    addNum: (state, action) => {
+      state.num += 1;
+    },
+    addFood: (state, action) => {
+      state.tempFood = [action.payload];
+    },
     addS3url: (state, action) => {
       return {
         ...state,
@@ -63,6 +72,7 @@ const imagesSlice = createSlice({
         ],
       };
     },
+
     addImageUrls: (state, action) => {
       state.imageurls.push({ imageurl: action.payload, id: nextId_image });
       nextId_image += 1;
@@ -83,39 +93,50 @@ const imagesSlice = createSlice({
       state.imageurls = [];
       state.add = [];
       state.remove = [];
+      state.tempFood = [];
       nextId = 0;
       nextId_image = 0;
     },
 
     removeDB: (state, action) => {
-      state.remove.push(action.payload.dietSeq);
-      // if (action.payload.current == "breakfast") {
-      //   return {
-      //     ...state,
-      //     breakfast: state.breakfast.filter(
-      //       (food) => food.dietSeq !== action.payload.dietSeq
-      //     ),
-      //   };
-      // } else if (action.payload.current == "lunch") {
-      //   return {
-      //     ...state,
-      //     lunch: state.lunch.filter(
-      //       (food) => food.dietSeq !== action.payload.dietSeq
-      //     ),
-      //   };
-      // } else if (action.payload.current == "dinner") {
-      //   return {
-      //     ...state,
-      //     dinner: state.dinner.filter(
-      //       (food) => food.dietSeq !== action.payload.dietSeq
-      //     ),
-      //   };
-      // }
+      console.log(action.payload);
+      state.remove.push(action.payload);
+    },
+    remove_breakfast: (state, action) => {
+      // state.remove.push(action.payload.dietSeq);
+      return {
+        ...state,
+        breakfast: state.breakfast.filter(
+          (food) => food.dietSeq !== action.payload
+        ),
+      };
+    },
+    remove_lunch: (state, action) => {
+      return {
+        ...state,
+        lunch: state.lunch.filter((food) => food.dietSeq !== action.payload),
+      };
+    },
+    remove_dinner: (state, action) => {
+      return {
+        ...state,
+        dinner: state.dinner.filter((food) => food.dietSeq !== action.payload),
+      };
     },
   },
 });
 
-export const { set, add, addImageUrls, remove, clear, addS3url, removeDB } =
-  imagesSlice.actions;
+export const {
+  set,
+  add,
+  addImageUrls,
+  remove,
+  clear,
+  addS3url,
+  removeDB,
+  addNum,
+  addFood,
+  remove_breakfast,
+} = imagesSlice.actions;
 
 export default imagesSlice;

@@ -4,6 +4,8 @@ const initialState = {
   userSeq: null,
   accessToken: null,
   userInfo: null,
+  consultantProfileImageUri: null,
+  consultantCertImageUri: null,
 };
 
 const userSlice = createSlice({
@@ -15,15 +17,31 @@ const userSlice = createSlice({
       state.accessToken = action.payload.accessToken;
     },
     logout: (state, action) => {
-      state.userSeq = null;
-      state.accessToken = null;
+      state.userSeq = null
+      state.accessToken = null
+      state.userInfo = null
     },
     setUserInfo: (state, action) => {
-      state.userInfo = action.payload;
+      state.userInfo = action.payload
+    },
+    setConsultantProfileImageUri: (state, action) => {
+      state.consultantProfileImageUri = action.payload
+    },
+    setConsultantCertImageUri: (state, action) => {
+      state.consultantCertImageUri = action.payload
+      console.log(state.consultantCertImageUri)
+    },
+    setUpdateCareer: (state, action) => {
+      state.userInfo.expertCareer.push(action.payload);
     },
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const {
+  login,
+  logout,
+  // 등록 안해도 됨..
+  setConsultantProfileImageUri,
+} = userSlice.actions;
 
 export default userSlice;

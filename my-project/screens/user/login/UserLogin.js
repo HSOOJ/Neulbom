@@ -41,11 +41,8 @@ export default function UserLogin({ navigation: { navigate } }) {
           password: user.password,
         })
       );
-      console.log(res.data.data.accessToken);
-      console.log(res.data.data.userSeq);
-      // getUserInfo()
       const userType = res.data.data.userType;
-      if (userType === "0") {
+      if (userType == 0) {
         try {
           const response = await axios.get(
             "https://k6a104.p.ssafy.io/api/member/info",
@@ -58,7 +55,7 @@ export default function UserLogin({ navigation: { navigate } }) {
         } catch (err) {
           console.log(err);
         }
-      } else if (userType === "1") {
+      } else if (userType == 1) {
         try {
           const response = await axios.get(
             "https://k6a104.p.ssafy.io/api/expert/info",
@@ -120,6 +117,7 @@ export default function UserLogin({ navigation: { navigate } }) {
           buttonName="로그인"
           fontSize={15}
           padding={9.5}
+          borderRadius={10}
         ></ButtonGreen2>
       </View>
       <ButtonGray

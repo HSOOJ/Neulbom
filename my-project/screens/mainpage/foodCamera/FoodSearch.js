@@ -12,6 +12,7 @@ import imagesSlice from "../../../slices/images";
 const View = styled.View``;
 const Text = styled.Text`
   color: ${(props) => props.color || `${palette.navy}`};
+  font-family: SeoulNamsanL;
 `;
 
 const Plus = styled.TouchableOpacity`
@@ -40,13 +41,16 @@ const FoodSearch = () => {
   const [loading, setLoading] = useState(true);
   const [foods, setFoods] = useState([]);
   const [tempFood, setTempFood] = useState([]);
+
   const navigate = useNavigation();
   const current = useNavigationState((state) => state.routes[0].params.current);
-  console.log("여기야!!!!!!", current);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     console.log("selected tempFood");
   }, [tempFood]);
+
   const onSearch = async (text) => {
     try {
       const response = await searchDiet(text);
@@ -65,34 +69,49 @@ const FoodSearch = () => {
   });
 
   const kcal = 321;
-  const onSelect = () => {
-    console.log();
-    dispatch(imagesSlice.actions.add({ tempFood, current, kcal }));
+  const onSelect = async (food) => {
+    setTempFood(food);
+    if (tempFood.length > 0 || food !== tempFood) {
+      dispatch(imagesSlice.actions.addFood(food));
+      dispatch(imagesSlice.actions.add({ food, current, kcal }));
+    }
     navigate.goBack();
   };
 
   return (
     <View>
-      <Text>검색하기</Text>
       <TextInput
         placeholder="검색하기"
         value={foodName}
         onChangeText={onChangeFoodName}
         onSubmitEditing={onSearch}
+        style={{
+          marginTop: 10,
+          marginHorizontal: 20,
+          marginBottom: 10,
+        }}
       />
 
       <Line></Line>
 
       {loading ? (
-        <Text>검색어를 입력해주세요!</Text>
+        <Text
+          style={{
+            marginTop: 10,
+            textAlign: "center",
+          }}
+        >
+          검색어를 입력해주세요!
+        </Text>
       ) : (
         foods.map((food) => (
           <ActionButtons
             key={food.foodSeq}
             android_ripple={{ color: `${palette.green}` }}
             onPress={() => {
-              setTempFood(food);
-              console.log(food);
+              // setTempFood(food);
+              onSelect(food);
+              // console.log(food);
             }}
           >
             <Text>
@@ -101,12 +120,6 @@ const FoodSearch = () => {
           </ActionButtons>
         ))
       )}
-      <Pressable
-        style={{ backgroundColor: `${palette.green}` }}
-        onPress={onSelect}
-      >
-        <Text>선택한 음식 추가</Text>
-      </Pressable>
     </View>
   );
 };

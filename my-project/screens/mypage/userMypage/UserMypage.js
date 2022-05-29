@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import ButtonCompo from "../../../components/button/ButtonCompo";
-import AlarmSetting from "../../../components/infoBox/AlarmSetting";
+import BpAlarmSetting from "../../../components/infoBox/BpAlarmSetting";
+import BsAlarmSetting from "../../../components/infoBox/BsAlarmSetting";
 import InfoMyDisease from "../../../components/infoBox/InfoMyDisease";
 import InfoMyself from "../../../components/infoBox/InfoMyself";
 import Intake from "../../../components/infoBox/Intake";
@@ -40,22 +41,15 @@ const UserMypage = (props) => {
 
   return (
     <ScrollView style={styles.background}>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("MypageUpdate"), props.onClick();
-        }}
-      >
-        <Text>수정하기</Text>
-      </TouchableOpacity>
-
       <Text style={styles.title}>내 소개 😊</Text>
       <InfoMyself styles={styles} update={props.update}></InfoMyself>
       <Text style={styles.title}>권장 섭취량 ✨</Text>
       <Intake styles={styles}></Intake>
       <Text style={styles.title}>건강 수치 ✨</Text>
       <SelectBox styles={styles}></SelectBox>
-      <Text style={styles.title}>알림 설정 ✨</Text>
-      <AlarmSetting styles={styles}></AlarmSetting>
+      {/* <Text style={styles.title}>알림 설정 ✨</Text>
+      <BpAlarmSetting styles={styles}></BpAlarmSetting>
+      <BsAlarmSetting styles={styles}></BsAlarmSetting> */}
       <Text style={styles.title}>질병 소개 ✨</Text>
       <InfoMyDisease styles={styles}></InfoMyDisease>
       <Text style={styles.title}>이용 안내 ✨</Text>
